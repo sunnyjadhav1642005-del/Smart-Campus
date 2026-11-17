@@ -1,0 +1,1280 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>SmartCampus | Admin Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+:root {
+    --navy: #102347;
+    --blue: #2563eb;
+    --light-blue: #eff6ff;
+    --cyan: #06b6d4;
+    --page: #f4f7fc;
+    --muted: #718096;
+    --line: #e8edf5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--page);
+    color: #172b4d;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+a { text-decoration: none; }
+
+.app-layout { min-height: 100vh; }
+
+/* SIDEBAR */
+
+.sc-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 255px;
+    background: linear-gradient(180deg, #102347, #142f5c);
+    padding: 25px 17px;
+    color: white;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+.sc-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 10px 28px;
+    border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+.sc-brand-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.sc-brand h2 {
+    margin: 0;
+    font-size: 19px;
+    color: white;
+}
+
+.sc-brand small {
+    color: #b8c9e4;
+    font-size: 11px;
+}
+
+.sc-menu-label {
+    margin: 27px 12px 10px;
+    color: #91a8cb;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.sc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.sc-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: #c5d3e8;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.sc-nav a:hover,
+.sc-nav a.active {
+    background: #2563eb;
+    color: white;
+}
+
+.sc-nav-icon {
+    width: 21px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.sc-sidebar-bottom {
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,.12);
+    padding-top: 17px;
+}
+
+.sc-sidebar-bottom a { color: #d6e2f4; }
+
+/* MAIN */
+
+.sc-main {
+    margin-left: 255px;
+    min-height: 100vh;
+}
+
+.sc-topbar {
+    min-height: 76px;
+    background: white;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 34px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    gap: 15px;
+}
+
+.sc-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.sc-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+    white-space: nowrap;
+}
+
+.sc-back-btn:hover {
+    background: #2563eb;
+    color: white;
+    transform: translateX(-3px);
+}
+
+.sc-topbar-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #243b60;
+}
+
+.sc-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sc-admin-avatar {
+    width: 39px;
+    height: 39px;
+    border-radius: 50%;
+    background: var(--light-blue);
+    color: var(--blue);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+}
+
+.sc-admin-text strong {
+    display: block;
+    font-size: 12px;
+}
+
+.sc-admin-text small {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.sc-content {
+    max-width: 1600px;
+    padding: 30px 34px 40px;
+    margin: auto;
+}
+
+.sc-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.sc-heading h1 {
+    font-size: 25px;
+    margin: 0;
+    color: #142b50;
+    font-weight: 800;
+}
+
+.sc-heading p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.sc-date-label {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #526580;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* FLASH MESSAGE */
+
+.sc-flash {
+    padding: 14px 17px;
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    border-radius: 11px;
+    margin-bottom: 17px;
+    font-size: 13px;
+}
+
+/* SECTION */
+
+.sc-section { margin-top: 32px; }
+
+.sc-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.sc-section-heading h2 {
+    margin: 0;
+    font-size: 17px;
+    color: #1a3155;
+    font-weight: 800;
+}
+
+.sc-section-heading p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* STAT CARDS */
+
+.sc-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.sc-stat {
+    background: white;
+    padding: 21px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(30, 64, 120, .035);
+    transition: .2s;
+}
+
+.sc-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(30, 64, 120, .09);
+}
+
+.sc-stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.sc-stat-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #718096;
+}
+
+.sc-stat-icon {
+    width: 39px;
+    height: 39px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    font-size: 18px;
+}
+
+.sc-icon-blue { background: #eaf2ff; color: #2563eb; }
+.sc-icon-orange { background: #fff4df; color: #d97706; }
+.sc-icon-cyan { background: #e0f7ff; color: #0284c7; }
+.sc-icon-green { background: #e5f9ef; color: #059669; }
+
+.sc-stat-number {
+    font-size: 30px;
+    font-weight: 800;
+    color: #172f56;
+    margin-top: 12px;
+    line-height: 1.2;
+}
+
+.sc-stat-note {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 8px;
+}
+
+/* INSIGHTS */
+
+.sc-insights {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.sc-insight {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 19px;
+    min-height: 135px;
+    box-shadow: 0 4px 15px rgba(30,64,120,.035);
+}
+
+.sc-insight-label {
+    font-size: 11px;
+    color: #718096;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.sc-insight-value {
+    font-size: 17px;
+    color: #2563eb;
+    font-weight: 800;
+    margin-top: 13px;
+    overflow-wrap: anywhere;
+}
+
+.sc-insight small {
+    display: block;
+    margin-top: 6px;
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+.sc-insight.danger {
+    background: #fffafa;
+    border-color: #fee2e2;
+}
+
+.sc-insight.danger .sc-insight-value { color: #dc2626; }
+
+/* PANEL AND TABLES */
+
+.sc-panel {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(30,64,120,.035);
+    overflow: hidden;
+}
+
+.sc-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.sc-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 750px;
+}
+
+.sc-table th {
+    background: #f5f8fd;
+    color: #50627d;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    font-weight: 800;
+    padding: 15px 13px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line);
+}
+
+.sc-table td {
+    padding: 14px 13px;
+    font-size: 12px;
+    color: #52627a;
+    border-bottom: 1px solid #edf1f7;
+    vertical-align: top;
+}
+
+.sc-table tbody tr:hover { background: #f8fbff; }
+.sc-table tbody tr:last-child td { border-bottom: none; }
+.sc-table strong { color: #243b60; }
+
+.sc-muted {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+/* FILTER PANEL */
+
+.sc-filter-panel {
+    padding: 19px;
+    margin-bottom: 15px;
+}
+
+.sc-filter-title {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 13px;
+    color: #203657;
+}
+
+.sc-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.sc-filters input,
+.sc-filters select {
+    min-width: 150px;
+    max-width: 100%;
+    flex: 1;
+    margin: 0;
+    padding: 11px 12px;
+    background: #fbfdff;
+    border: 1px solid #dfe7f1;
+    border-radius: 9px;
+    color: #344762;
+    font-size: 12px;
+}
+
+.sc-filters .search-box {
+    min-width: 240px;
+    flex: 2;
+}
+
+.sc-btn {
+    display: inline-block;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    background: #2563eb;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.sc-btn:hover {
+    background: #1d4ed8;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.sc-btn-light {
+    background: #eef4ff;
+    color: #2563eb;
+}
+
+.sc-btn-light:hover {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.sc-result-count {
+    color: #7b8ca5;
+    font-size: 11px;
+    margin: 13px 0 0;
+}
+
+/* STATUS AND PRIORITY */
+
+.sc-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.sc-pending { background: #fff4d9; color: #a16207; }
+.sc-progress { background: #e0f2fe; color: #0369a1; }
+.sc-resolved { background: #dcfce7; color: #15803d; }
+.sc-high { background: #fee2e2; color: #b91c1c; }
+.sc-medium { background: #fef3c7; color: #92400e; }
+.sc-low { background: #dcfce7; color: #166534; }
+
+.sc-warning {
+    color: #dc2626 !important;
+    font-weight: 800;
+}
+
+/* UPDATE FORM */
+
+.sc-update-form { min-width: 130px; }
+
+.sc-update-form select {
+    width: 130px;
+    padding: 8px;
+    border: 1px solid #dce5f0;
+    border-radius: 7px;
+    margin-bottom: 7px;
+    font-size: 11px;
+}
+
+.sc-update-form button {
+    padding: 8px 12px;
+    width: 100%;
+}
+
+/* PHOTOS */
+
+.sc-photo {
+    width: 78px;
+    height: 62px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e1e8f0;
+    transition: .2s;
+}
+
+.sc-photo:hover { transform: scale(1.06); }
+
+.sc-no-photo {
+    color: #a0aec0;
+    font-size: 11px;
+}
+
+/* EMPTY STATE AND FOOTER */
+
+.sc-empty {
+    padding: 24px !important;
+    text-align: center;
+    color: #94a3b8 !important;
+}
+
+.sc-footer {
+    text-align: center;
+    padding: 25px 10px;
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 1150px) {
+    .sc-stats,
+    .sc-insights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sc-content { padding: 25px 22px; }
+}
+
+@media(max-width: 760px) {
+    .sc-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 15px;
+    }
+
+    .sc-brand { padding-bottom: 13px; }
+    .sc-menu-label { margin-top: 14px; }
+
+    .sc-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sc-sidebar-bottom { margin-top: 12px; }
+    .sc-main { margin-left: 0; }
+
+    .sc-topbar {
+        min-height: 65px;
+        padding: 10px 17px;
+    }
+
+    .sc-topbar-left { gap: 9px; }
+    .sc-back-btn { padding: 9px 11px; font-size: 12px; }
+
+    .sc-content { padding: 20px 14px; }
+    .sc-heading h1 { font-size: 21px; }
+}
+
+@media(max-width: 480px) {
+    .sc-stats,
+    .sc-insights {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .sc-stat,
+    .sc-insight { padding: 14px; }
+
+    .sc-stat-number { font-size: 24px; }
+    .sc-stat-label { font-size: 10px; }
+
+    .sc-stat-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 15px;
+    }
+
+    .sc-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sc-filters input,
+    .sc-filters select,
+    .sc-filters .search-box {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .sc-date-label { display: none; }
+
+    .sc-admin-text { display: none; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sc-sidebar">
+
+        <div class="sc-brand">
+            <div class="sc-brand-icon">S</div>
+            <div>
+                <h2>SmartCampus</h2>
+                <small>Smart Complaint System</small>
+            </div>
+        </div>
+
+        <div class="sc-menu-label">MAIN MENU</div>
+
+        <nav class="sc-nav">
+            <a href="#overview" class="active">
+                <span class="sc-nav-icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="#insights">
+                <span class="sc-nav-icon">✦</span>
+                AI Insights
+            </a>
+
+            <a href="#department">
+                <span class="sc-nav-icon">▤</span>
+                Department Analytics
+            </a>
+
+            <a href="#overdue">
+                <span class="sc-nav-icon">◷</span>
+                Overdue Alerts
+            </a>
+
+            <a href="#complaints">
+                <span class="sc-nav-icon">▣</span>
+                All Complaints
+            </a>
+        </nav>
+
+        <div class="sc-menu-label">MANAGEMENT</div>
+
+        <nav class="sc-nav">
+            <a href="{{ url_for('resolved_complaints') }}">
+                <span class="sc-nav-icon">✓</span>
+                Resolved Complaints
+            </a>
+        </nav>
+
+        <div class="sc-sidebar-bottom">
+            <nav class="sc-nav">
+                <a href="{{ url_for('logout') }}">
+                    <span class="sc-nav-icon">⇥</span>
+                    Logout
+                </a>
+            </nav>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="sc-main">
+
+        <!-- TOPBAR WITH BACK BUTTON -->
+        <div class="sc-topbar">
+
+            <div class="sc-topbar-left">
+
+                <button type="button"
+                        class="sc-back-btn"
+                        onclick="goBack()">
+                    <span style="font-size:18px;">←</span>
+                    Back
+                </button>
+
+                <div class="sc-topbar-title">
+                    Administrator Panel
+                </div>
+
+            </div>
+
+            <div class="sc-topbar-right">
+                <div class="sc-admin-avatar">A</div>
+                <div class="sc-admin-text">
+                    <strong>Administrator</strong>
+                    <small>System Management</small>
+                </div>
+            </div>
+
+        </div>
+
+        <main class="sc-content">
+
+            <!-- PAGE HEADING -->
+            <div class="sc-heading" id="overview">
+                <div>
+                    <h1>Dashboard Overview</h1>
+                    <p>Monitor and manage all campus complaints from one place.</p>
+                </div>
+
+                <div class="sc-date-label">
+                    ● SmartCampus Administration
+                </div>
+            </div>
+
+            <!-- FLASH MESSAGES -->
+            {% with messages = get_flashed_messages() %}
+                {% for message in messages %}
+                    <div class="sc-flash">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            <!-- STATISTICS -->
+            <section class="sc-stats">
+
+                <div class="sc-stat">
+                    <div class="sc-stat-top">
+                        <span class="sc-stat-label">Total Complaints</span>
+                        <span class="sc-stat-icon sc-icon-blue">▣</span>
+                    </div>
+                    <div class="sc-stat-number">{{ total }}</div>
+                    <div class="sc-stat-note">All registered complaints</div>
+                </div>
+
+                <div class="sc-stat">
+                    <div class="sc-stat-top">
+                        <span class="sc-stat-label">Pending Complaints</span>
+                        <span class="sc-stat-icon sc-icon-orange">◷</span>
+                    </div>
+                    <div class="sc-stat-number" style="color:#d97706">{{ pending }}</div>
+                    <div class="sc-stat-note">Waiting for action</div>
+                </div>
+
+                <div class="sc-stat">
+                    <div class="sc-stat-top">
+                        <span class="sc-stat-label">In Progress</span>
+                        <span class="sc-stat-icon sc-icon-cyan">↻</span>
+                    </div>
+                    <div class="sc-stat-number" style="color:#0284c7">{{ in_progress }}</div>
+                    <div class="sc-stat-note">Currently being handled</div>
+                </div>
+
+                <div class="sc-stat">
+                    <div class="sc-stat-top">
+                        <span class="sc-stat-label">Resolved Complaints</span>
+                        <span class="sc-stat-icon sc-icon-green">✓</span>
+                    </div>
+                    <div class="sc-stat-number" style="color:#059669">{{ resolved }}</div>
+                    <div class="sc-stat-note">Successfully resolved</div>
+                </div>
+
+            </section>
+
+            <!-- AI INSIGHTS -->
+            <section class="sc-section" id="insights">
+
+                <div class="sc-section-heading">
+                    <div>
+                        <h2>✦ AI & Smart Insights</h2>
+                        <p>Intelligent analysis of campus complaints</p>
+                    </div>
+                </div>
+
+                <div class="sc-insights">
+
+                    <div class="sc-insight">
+                        <div class="sc-insight-label">Most Reported Category</div>
+                        <div class="sc-insight-value">
+                            {% if category_insight %}
+                                {{ category_insight['category_name'] }}
+                            {% else %}
+                                No Data
+                            {% endif %}
+                        </div>
+                        {% if category_insight %}
+                            <small>{{ category_insight['total'] }} complaints</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="sc-insight">
+                        <div class="sc-insight-label">Department With Most Pending Complaints</div>
+                        <div class="sc-insight-value">
+                            {% if pending_department_insight %}
+                                {{ pending_department_insight['department_name'] }}
+                            {% else %}
+                                No Pending Complaints
+                            {% endif %}
+                        </div>
+                        {% if pending_department_insight %}
+                            <small>{{ pending_department_insight['total'] }} pending complaints</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="sc-insight">
+                        <div class="sc-insight-label">High Priority Unresolved Complaints</div>
+                        <div class="sc-insight-value sc-warning">
+                            {{ high_priority_pending }}
+                        </div>
+                        <small>Requires attention</small>
+                    </div>
+
+                    <div class="sc-insight danger">
+                        <div class="sc-insight-label">Overdue Complaints (3+ Days)</div>
+                        <div class="sc-insight-value">
+                            {{ overdue_count }}
+                        </div>
+                        <small>Needs follow-up</small>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- DEPARTMENT ANALYTICS -->
+            <section class="sc-section" id="department">
+
+                <div class="sc-section-heading">
+                    <div>
+                        <h2>Department-Wise Analytics</h2>
+                        <p>Complaint distribution across departments</p>
+                    </div>
+                </div>
+
+                <div class="sc-panel">
+                    <div class="sc-table-scroll">
+                        <table class="sc-table">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Total</th>
+                                    <th>Pending</th>
+                                    <th>In Progress</th>
+                                    <th>Resolved</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for d in department_rows %}
+                                <tr>
+                                    <td><strong>{{ d['department_name'] }}</strong></td>
+                                    <td>{{ d['total'] }}</td>
+                                    <td>{{ d['pending'] or 0 }}</td>
+                                    <td>{{ d['in_progress'] or 0 }}</td>
+                                    <td>{{ d['resolved'] or 0 }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="sc-empty">
+                                        No department data available.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- OVERDUE ALERTS -->
+            <section class="sc-section" id="overdue">
+
+                <div class="sc-section-heading">
+                    <div>
+                        <h2>Overdue Complaint Alerts</h2>
+                        <p>Complaints pending for three or more days</p>
+                    </div>
+                </div>
+
+                <div class="sc-panel">
+                    <div class="sc-table-scroll">
+                        <table class="sc-table">
+                            <thead>
+                                <tr>
+                                    <th>Complaint ID</th>
+                                    <th>Title</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                    <th>Pending Days</th>
+                                    <th>Escalation Level</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for c in overdue_alerts %}
+                                <tr>
+                                    <td><strong>SC-{{ '%03d'|format(c['id']) }}</strong></td>
+                                    <td>{{ c['title'] }}</td>
+                                    <td>{{ c['department'] }}</td>
+                                    <td>{{ c['status'] }}</td>
+                                    <td class="sc-warning">{{ c['pending_days'] }} days</td>
+                                    <td>{{ c['escalation_level'] }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="6" class="sc-empty">
+                                        No overdue complaints. Great!
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ALL COMPLAINTS -->
+            <section class="sc-section" id="complaints">
+
+                <div class="sc-section-heading">
+                    <div>
+                        <h2>All Campus Complaints</h2>
+                        <p>Search, filter and manage every complaint</p>
+                    </div>
+                </div>
+
+                <!-- SEARCH AND FILTERS -->
+                <div class="sc-panel sc-filter-panel">
+
+                    <div class="sc-filter-title">Search & Filter Complaints</div>
+
+                    <div class="sc-filters">
+
+                        <input type="text"
+                               id="complaintSearch"
+                               class="search-box"
+                               placeholder="Search by ID, title or description...">
+
+                        <select id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+
+                        <select id="departmentFilter">
+                            <option value="">All Departments</option>
+                            {% for d in department_rows %}
+                            <option value="{{ d['department_name'] }}">
+                                {{ d['department_name'] }}
+                            </option>
+                            {% endfor %}
+                        </select>
+
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="Internet / Network">Internet / Network</option>
+                            <option value="Electricity">Electricity</option>
+                            <option value="Cleanliness">Cleanliness</option>
+                            <option value="Laboratory Equipment">Laboratory Equipment</option>
+                            <option value="Classroom Furniture">Classroom Furniture</option>
+                        </select>
+
+                        <button type="button"
+                                class="sc-btn sc-btn-light"
+                                onclick="resetFilters()">
+                            Reset Filters
+                        </button>
+
+                    </div>
+
+                    <p id="resultCount" class="sc-result-count">
+                        Showing complaints
+                    </p>
+                </div>
+
+                <!-- COMPLAINT TABLE -->
+                <div class="sc-panel">
+                    <div class="sc-table-scroll">
+
+                        <table class="sc-table" id="complaintTable">
+
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Complaint Details</th>
+                                    <th>Department / Location</th>
+                                    <th>AI Category</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Pending Days</th>
+                                    <th>Escalation</th>
+                                    <th>Update Status</th>
+                                    <th>Before Resolution</th>
+                                    <th>After Resolution</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for c in complaints %}
+                                <tr>
+
+                                    <td>
+                                        <strong>SC-{{ '%03d'|format(c['id']) }}</strong>
+                                    </td>
+
+                                    <td>
+                                        <strong>{{ c['title'] }}</strong>
+                                        <br>
+                                        {{ c['description'] }}
+                                        <br>
+                                        <small class="sc-muted">{{ c['created_at'] }}</small>
+                                    </td>
+
+                                    <td>
+                                        <strong>{{ c['department'] }}</strong>
+                                        <br>
+                                        {{ c['location_type'] }}:
+                                        {{ c['location'] }}
+                                    </td>
+
+                                    <td>{{ c['category'] }}</td>
+
+                                    <td>
+                                        {% if c['priority'] == 'High' %}
+                                            <span class="sc-badge sc-high">{{ c['priority'] }}</span>
+                                        {% elif c['priority'] == 'Medium' %}
+                                            <span class="sc-badge sc-medium">{{ c['priority'] }}</span>
+                                        {% else %}
+                                            <span class="sc-badge sc-low">{{ c['priority'] }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if c['status'] == 'Resolved' %}
+                                            <span class="sc-badge sc-resolved">{{ c['status'] }}</span>
+                                        {% elif c['status'] == 'In Progress' %}
+                                            <span class="sc-badge sc-progress">{{ c['status'] }}</span>
+                                        {% else %}
+                                            <span class="sc-badge sc-pending">{{ c['status'] }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>{{ c['pending_days'] }} days</td>
+
+                                    <td>{{ c['escalation_level'] }}</td>
+
+                                    <td>
+                                        <form class="sc-update-form"
+                                              method="POST"
+                                              action="{{ url_for('update_status', complaint_id=c['id']) }}">
+
+                                            <select name="status" required>
+                                                <option value="Pending"
+                                                    {% if c['status'] == 'Pending' %}selected{% endif %}>
+                                                    Pending
+                                                </option>
+
+                                                <option value="In Progress"
+                                                    {% if c['status'] == 'In Progress' %}selected{% endif %}>
+                                                    In Progress
+                                                </option>
+
+                                                <option value="Resolved"
+                                                    {% if c['status'] == 'Resolved' %}selected{% endif %}>
+                                                    Resolved
+                                                </option>
+                                            </select>
+
+                                            <button type="submit" class="sc-btn">
+                                                Update
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                    <!-- BEFORE PHOTO -->
+                                    <td>
+                                        {% if c['complaint_photo'] %}
+                                            <a href="{{ url_for('static', filename=c['complaint_photo']) }}"
+                                               target="_blank">
+                                                <img
+                                                    src="{{ url_for('static', filename=c['complaint_photo']) }}"
+                                                    class="sc-photo"
+                                                    alt="Before Resolution Photo">
+                                            </a>
+                                        {% else %}
+                                            <span class="sc-no-photo">No Photo</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- AFTER PHOTO -->
+                                    <td>
+                                        {% if c['resolution_photo'] %}
+                                            <a href="{{ url_for('static', filename=c['resolution_photo']) }}"
+                                               target="_blank">
+                                                <img
+                                                    src="{{ url_for('static', filename=c['resolution_photo']) }}"
+                                                    class="sc-photo"
+                                                    alt="After Resolution Photo">
+                                            </a>
+                                        {% else %}
+                                            <span class="sc-no-photo">No Photo</span>
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+
+                            {% else %}
+                                <tr>
+                                    <td colspan="11" class="sc-empty">
+                                        No complaints available.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <footer class="sc-footer">
+                SmartCampus © AI-Based Smart Campus Complaint & Resolution System
+            </footer>
+
+        </main>
+    </div>
+</div>
+
+<script>
+
+/* BACK BUTTON */
+function goBack() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = "{{ url_for('logout') }}";
+    }
+}
+
+/* COMPLAINT FILTERS */
+function filterComplaints() {
+
+    const search = document.getElementById("complaintSearch").value.toLowerCase().trim();
+    const status = document.getElementById("statusFilter").value.toLowerCase().trim();
+    const department = document.getElementById("departmentFilter").value.toLowerCase().trim();
+    const category = document.getElementById("categoryFilter").value.toLowerCase().trim();
+
+    const rows = document.querySelectorAll("#complaintTable tbody tr");
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+
+        const cells = row.querySelectorAll("td");
+
+        if (cells.length < 11) {
+            row.style.display = "none";
+            return;
+        }
+
+        const idText = cells[0].textContent.toLowerCase();
+        const complaintText = cells[1].textContent.toLowerCase();
+        const departmentText = cells[2].textContent.toLowerCase();
+        const categoryText = cells[3].textContent.toLowerCase();
+        const statusText = cells[5].textContent.toLowerCase();
+
+        const matchSearch =
+            !search ||
+            idText.includes(search) ||
+            complaintText.includes(search);
+
+        const matchStatus = !status || statusText.includes(status);
+        const matchDepartment = !department || departmentText.includes(department);
+        const matchCategory = !category || categoryText.includes(category);
+
+        const show =
+            matchSearch &&
+            matchStatus &&
+            matchDepartment &&
+            matchCategory;
+
+        row.style.display = show ? "" : "none";
+
+        if (show) visibleCount++;
+    });
+
+    document.getElementById("resultCount").textContent =
+        "Showing " + visibleCount + " complaints";
+}
+
+function resetFilters() {
+    document.getElementById("complaintSearch").value = "";
+    document.getElementById("statusFilter").value = "";
+    document.getElementById("departmentFilter").value = "";
+    document.getElementById("categoryFilter").value = "";
+
+    filterComplaints();
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    document.getElementById("complaintSearch").addEventListener("input", filterComplaints);
+    document.getElementById("statusFilter").addEventListener("change", filterComplaints);
+    document.getElementById("departmentFilter").addEventListener("change", filterComplaints);
+    document.getElementById("categoryFilter").addEventListener("change", filterComplaints);
+
+    filterComplaints();
+});
+
+</script>
+
+</body>
+</html>

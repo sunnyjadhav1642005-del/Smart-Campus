@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Complaint | SmartCampus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .complaint-form {
+            max-width: 750px;
+            margin: 30px auto;
+            padding: 28px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px #00000012;
+        }
+
+        .complaint-form label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: 600;
+        }
+
+        .complaint-form input,
+        .complaint-form select,
+        .complaint-form textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #d5dce5;
+            border-radius: 7px;
+            box-sizing: border-box;
+            font: inherit;
+        }
+
+        .complaint-form textarea {
+            min-height: 120px;
+        }
+
+        .photo-section {
+            margin-top: 22px;
+            padding: 18px;
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 10px;
+        }
+
+        .photo-section input {
+            background: white;
+        }
+
+        #photoPreview {
+            display: none;
+            max-width: 100%;
+            max-height: 250px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .submit-btn {
+            margin-top: 22px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .form-message {
+            color: #b42318;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: auto;
+            margin: 0;
+            padding: 10px 20px;
+            background: white;
+            color: #1e40af;
+            border: 1px solid #c7d2fe;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 3px 12px #00000020;
+        }
+
+        .back-btn:hover {
+            background: #e0e7ff;
+        }
+
+        @media(max-width: 600px) {
+            .complaint-form {
+                margin: 75px 12px 25px;
+                padding: 20px;
+            }
+
+            .back-btn {
+                top: 12px;
+                left: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button type="button" class="back-btn" onclick="goBack()">
+        ← Back
+    </button>
+
+    <div class="complaint-form">
+
+        <h1>Submit a Complaint</h1>
+        <p>Report a campus issue so the responsible team can review it.</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <p class="form-message">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST"
+              action="{{ url_for('new_complaint') }}"
+              enctype="multipart/form-data"
+              id="complaintForm">
+
+            <label for="title">Complaint Title</label>
+            <input id="title" name="title" required
+                   placeholder="e.g. Hostel water supply problem">
+
+            <label for="location_type">Campus Location Type</label>
+            <select id="location_type" name="location_type" required>
+                <option value="">Select campus area</option>
+                <option>Classroom</option>
+                <option>Laboratory</option>
+                <option>Hostel</option>
+                <option>Canteen / Mess</option>
+                <option>Internal Campus Road</option>
+                <option>Washroom</option>
+                <option>Library</option>
+                <option>Parking Area</option>
+                <option>Seminar Hall</option>
+                <option>Sports Ground</option>
+                <option>Drinking Water Area</option>
+                <option>Other Campus Area</option>
+            </select>
+
+            <label for="category">Issue Category</label>
+            <select id="category" name="category" required>
+                <option value="">Select category</option>
+                <option>Classroom Furniture</option>
+                <option>Laboratory Equipment</option>
+                <option>Internet / Network</option>
+                <option>Digital Board / Projector</option>
+                <option>Electricity</option>
+                <option>Road / Footpath Damage</option>
+                <option>Water Supply / Plumbing</option>
+                <option>Food Quality / Hygiene</option>
+                <option>Cleanliness / Drainage</option>
+                <option>Other</option>
+            </select>
+
+            <label for="department">Department</label>
+            <select id="department" name="department" required>
+                <option value="">Select department</option>
+                <option>AIML</option>
+                <option>Computer Engineering</option>
+                <option>Information Technology</option>
+                <option>Electronics</option>
+                <option>Mechanical</option>
+                <option>Civil</option>
+                <option>Electrical</option>
+                <option>Hostel Management</option>
+                <option>Canteen Management</option>
+                <option>Maintenance Department</option>
+                <option>Common Facility</option>
+            </select>
+
+            <label for="academic_year">Academic Year</label>
+            <select id="academic_year" name="academic_year" required>
+                <option value="">Select year</option>
+                <option>First Year</option>
+                <option>Second Year</option>
+                <option>Third Year</option>
+                <option>Final Year</option>
+                <option>Not Applicable</option>
+            </select>
+
+            <label for="division">Division</label>
+            <select id="division" name="division" required>
+                <option value="">Select division</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>Not Applicable</option>
+            </select>
+
+            <label for="location">Specific Location / Room Number</label>
+            <input id="location" name="location" required
+                   placeholder="e.g. Boys Hostel, Room 204">
+
+            <label for="description">Describe the Problem</label>
+            <textarea id="description" name="description" required
+                      placeholder="Explain the issue clearly..."></textarea>
+
+            <!-- Student Photo Upload -->
+            <div class="photo-section">
+                <h3>📷 Upload Complaint Photo</h3>
+                <p>Attach a photo showing the campus problem (optional).</p>
+
+                <label for="complaint_photo">Select Problem Photo</label>
+                <input
+                    type="file"
+                    id="complaint_photo"
+                    name="complaint_photo"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                >
+
+                <small>Allowed: JPG, JPEG, PNG, WEBP | Maximum size: 5 MB</small>
+
+                <img id="photoPreview" alt="Selected complaint photo preview">
+            </div>
+
+            <button class="submit-btn" type="submit">
+                Submit Complaint
+            </button>
+
+        </form>
+    </div>
+
+    <script>
+        function goBack() {
+            if (
+                document.referrer &&
+                new URL(document.referrer).origin === window.location.origin
+            ) {
+                history.back();
+            } else {
+                window.location.href = "{{ url_for('student_dashboard') }}";
+            }
+        }
+
+        const photoInput = document.getElementById("complaint_photo");
+        const photoPreview = document.getElementById("photoPreview");
+        const complaintForm = document.getElementById("complaintForm");
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+        photoInput.addEventListener("change", function () {
+            const file = this.files[0];
+
+            photoPreview.style.display = "none";
+            photoPreview.removeAttribute("src");
+
+            if (!file) return;
+
+            if (!allowedTypes.includes(file.type)) {
+                alert("Please select JPG, PNG or WEBP image only.");
+                this.value = "";
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert("Photo size must be less than 5 MB.");
+                this.value = "";
+                return;
+            }
+
+            photoPreview.src = URL.createObjectURL(file);
+            photoPreview.style.display = "block";
+        });
+
+        complaintForm.addEventListener("submit", function (event) {
+            const file = photoInput.files[0];
+
+            if (file) {
+                if (!allowedTypes.includes(file.type) ||
+                    file.size > 5 * 1024 * 1024) {
+                    event.preventDefault();
+                    alert("Please select a valid image below 5 MB.");
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

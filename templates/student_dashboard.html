@@ -1,0 +1,871 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartCampus | Student Dashboard</title>
+
+<style>
+:root {
+    --navy: #102347;
+    --blue: #2563eb;
+    --page: #f4f7fc;
+    --line: #e8edf5;
+    --muted: #718096;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--page);
+    color: #172b4d;
+}
+
+/* SIDEBAR */
+
+.student-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 250px;
+    background: linear-gradient(180deg, #102347, #142f5c);
+    padding: 25px 17px;
+    color: white;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 10px 25px;
+    border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+.student-brand-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.student-brand h2 {
+    margin: 0;
+    font-size: 19px;
+    color: white;
+}
+
+.student-brand small {
+    color: #b8c9e4;
+    font-size: 11px;
+}
+
+.student-menu-label {
+    margin: 27px 12px 10px;
+    color: #91a8cb;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.student-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.student-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: #c5d3e8;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.student-nav a:hover,
+.student-nav a.active {
+    background: #2563eb;
+    color: white;
+}
+
+.student-nav-icon {
+    width: 21px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.student-sidebar-bottom {
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,.12);
+    padding-top: 17px;
+}
+
+/* MAIN */
+
+.student-main {
+    margin-left: 250px;
+    min-height: 100vh;
+}
+
+.student-topbar {
+    min-height: 76px;
+    background: white;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    gap: 15px;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.topbar-back {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #dbeafe;
+    padding: 9px 14px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.topbar-back:hover {
+    background: #2563eb;
+    color: white;
+}
+
+.student-topbar-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #243b60;
+}
+
+.student-profile {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #eaf2ff;
+    color: #2563eb;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 17px;
+}
+
+.student-profile strong {
+    display: block;
+    font-size: 12px;
+}
+
+.student-profile small {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.student-content {
+    max-width: 1550px;
+    padding: 30px 32px 40px;
+    margin: auto;
+}
+
+/* WELCOME */
+
+.student-welcome {
+    background: linear-gradient(115deg, #153568, #2563eb, #0891b2);
+    color: white;
+    border-radius: 17px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(37,99,235,.15);
+}
+
+.student-welcome:after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    right: -65px;
+    top: -100px;
+    border: 35px solid rgba(255,255,255,.09);
+    border-radius: 50%;
+}
+
+.student-welcome h1 {
+    font-size: 25px;
+    margin: 0 0 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.student-welcome p {
+    margin: 0;
+    color: #dbeafe;
+    font-size: 13px;
+    position: relative;
+    z-index: 1;
+}
+
+/* QUICK ACTIONS */
+
+.student-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 13px;
+    margin-bottom: 30px;
+}
+
+.student-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 9px;
+    text-decoration: none;
+    background: #2563eb;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.student-btn:hover {
+    background: #1d4ed8;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.student-btn-light {
+    background: white;
+    color: #2563eb;
+    border: 1px solid #dce7f8;
+}
+
+.student-btn-light:hover {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+/* SECTION */
+
+.student-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.student-section-heading h2 {
+    margin: 0;
+    font-size: 19px;
+    color: #1a3155;
+    font-weight: 800;
+}
+
+.student-section-heading p {
+    margin: 5px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* TABLE */
+
+.student-table-box {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(30,64,120,.035);
+    overflow: hidden;
+}
+
+.student-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 950px;
+}
+
+.student-table th {
+    background: #f5f8fd;
+    color: #50627d;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    font-weight: 800;
+    padding: 16px 14px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line);
+}
+
+.student-table td {
+    padding: 17px 14px;
+    font-size: 12px;
+    color: #52627a;
+    border-bottom: 1px solid #edf1f7;
+    vertical-align: top;
+}
+
+.student-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.student-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.complaint-id {
+    color: #2563eb;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.complaint-title {
+    color: #243b60;
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.complaint-meta {
+    margin: 5px 0;
+    color: #718096;
+    font-size: 11px;
+}
+
+/* STATUS */
+
+.student-status {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background: #fff4d9;
+    color: #a16207;
+}
+
+.status-progress {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.status-resolved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* PHOTOS */
+
+.student-photo-cell {
+    min-width: 155px;
+}
+
+.student-photo-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #52627a;
+    margin-bottom: 8px;
+}
+
+.student-photo {
+    width: 115px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 9px;
+    border: 1px solid #dce5f0;
+    display: block;
+    transition: .2s;
+}
+
+.student-photo:hover {
+    transform: scale(1.05);
+}
+
+.student-no-photo {
+    color: #a0aec0;
+    font-size: 11px;
+}
+
+/* EMPTY STATE */
+
+.student-empty {
+    text-align: center;
+    padding: 55px 20px;
+}
+
+.student-empty-icon {
+    width: 65px;
+    height: 65px;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font-size: 27px;
+    margin: 0 auto 15px;
+}
+
+.student-empty h3 {
+    color: #243b60;
+    margin: 0 0 8px;
+    font-size: 17px;
+}
+
+.student-empty p {
+    color: #94a3b8;
+    font-size: 12px;
+    margin-bottom: 18px;
+}
+
+/* FOOTER */
+
+.student-footer {
+    text-align: center;
+    padding: 25px;
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 760px) {
+
+    .student-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 15px;
+    }
+
+    .student-brand {
+        padding-bottom: 13px;
+    }
+
+    .student-menu-label {
+        margin-top: 14px;
+    }
+
+    .student-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .student-sidebar-bottom {
+        margin-top: 12px;
+    }
+
+    .student-main {
+        margin-left: 0;
+    }
+
+    .student-topbar {
+        padding: 12px 15px;
+        min-height: 65px;
+    }
+
+    .topbar-left {
+        gap: 8px;
+    }
+
+    .topbar-back {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    .student-topbar-title {
+        font-size: 12px;
+    }
+
+    .student-content {
+        padding: 20px 14px;
+    }
+
+    .student-welcome {
+        padding: 24px 20px;
+    }
+
+    .student-welcome h1 {
+        font-size: 21px;
+    }
+}
+
+@media(max-width: 480px) {
+
+    .student-profile small {
+        display: none;
+    }
+
+    .student-actions {
+        flex-direction: column;
+    }
+
+    .student-btn {
+        justify-content: center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="student-app">
+
+    <!-- SIDEBAR -->
+    <aside class="student-sidebar">
+
+        <div class="student-brand">
+            <div class="student-brand-icon">S</div>
+
+            <div>
+                <h2>SmartCampus</h2>
+                <small>Student Portal</small>
+            </div>
+        </div>
+
+        <div class="student-menu-label">STUDENT MENU</div>
+
+        <nav class="student-nav">
+
+            <a href="#home" class="active">
+                <span class="student-nav-icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="#my-complaints">
+                <span class="student-nav-icon">▣</span>
+                My Complaints
+            </a>
+
+            <a href="{{ url_for('new_complaint') }}">
+                <span class="student-nav-icon">＋</span>
+                Submit Complaint
+            </a>
+
+        </nav>
+
+        <div class="student-sidebar-bottom">
+            <nav class="student-nav">
+                <a href="{{ url_for('logout') }}">
+                    <span class="student-nav-icon">⇥</span>
+                    Logout
+                </a>
+            </nav>
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <div class="student-main">
+
+        <!-- TOPBAR WITH BACK BUTTON -->
+        <div class="student-topbar">
+
+            <div class="topbar-left">
+
+                <button type="button"
+                        class="topbar-back"
+                        onclick="goBack()">
+                    ← Back
+                </button>
+
+                <div class="student-topbar-title">
+                    Student Portal
+                </div>
+
+            </div>
+
+            <div class="student-profile">
+
+                <div class="student-avatar">
+                    {{ session.get('user_name', 'Student')[0]|upper }}
+                </div>
+
+                <div>
+                    <strong>{{ session.get('user_name', 'Student') }}</strong>
+                    <small>Student Account</small>
+                </div>
+
+            </div>
+
+        </div>
+
+        <main class="student-content">
+
+            <!-- WELCOME -->
+            <section class="student-welcome" id="home">
+
+                <h1>
+                    Welcome, {{ session.get('user_name', 'Student') }}!
+                </h1>
+
+                <p>
+                    Manage your campus complaints and track their resolution progress.
+                </p>
+
+            </section>
+
+            <!-- ACTIONS -->
+            <div class="student-actions">
+
+                <a href="{{ url_for('new_complaint') }}" class="student-btn">
+                    ＋ Submit New Complaint
+                </a>
+
+                <a href="{{ url_for('student_dashboard') }}"
+                   class="student-btn student-btn-light">
+                    ↻ Refresh Dashboard
+                </a>
+
+            </div>
+
+            <!-- MY COMPLAINTS -->
+            <section id="my-complaints">
+
+                <div class="student-section-heading">
+
+                    <div>
+                        <h2>My Complaints</h2>
+                        <p>View your submitted complaints and resolution updates.</p>
+                    </div>
+
+                </div>
+
+                <div class="student-table-box">
+
+                    {% if complaints %}
+
+                    <div class="student-table-scroll">
+
+                        <table class="student-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Complaint ID</th>
+                                    <th>Complaint Details</th>
+                                    <th>Before Resolution</th>
+                                    <th>After Resolution</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for complaint in complaints %}
+
+                                <tr>
+
+                                    <td>
+                                        <span class="complaint-id">
+                                            SC-{{ '%03d'|format(complaint['id']) }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+
+                                        <div class="complaint-title">
+                                            {{ complaint['title'] }}
+                                        </div>
+
+                                        <div class="complaint-meta">
+                                            Department: {{ complaint['department'] }}
+                                        </div>
+
+                                        <div class="complaint-meta">
+                                            Category: {{ complaint['category'] }}
+                                        </div>
+
+                                        <div class="complaint-meta">
+                                            Priority: {{ complaint['priority'] }}
+                                        </div>
+
+                                    </td>
+
+                                    <!-- BEFORE RESOLUTION PHOTO -->
+                                    <td class="student-photo-cell">
+
+                                        {% if complaint['complaint_photo'] %}
+
+                                            <div class="student-photo-label">
+                                                Your Complaint Photo
+                                            </div>
+
+                                            <a href="{{ url_for('static', filename=complaint['complaint_photo']) }}"
+                                               target="_blank">
+
+                                                <img
+                                                    src="{{ url_for('static', filename=complaint['complaint_photo']) }}"
+                                                    class="student-photo"
+                                                    alt="Before Resolution Photo">
+
+                                            </a>
+
+                                        {% else %}
+
+                                            <span class="student-no-photo">
+                                                No photo uploaded.
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <!-- AFTER RESOLUTION PHOTO -->
+                                    <td class="student-photo-cell">
+
+                                        {% if complaint['resolution_photo'] %}
+
+                                            <div class="student-photo-label">
+                                                HOD Resolution Photo
+                                            </div>
+
+                                            <a href="{{ url_for('static', filename=complaint['resolution_photo']) }}"
+                                               target="_blank">
+
+                                                <img
+                                                    src="{{ url_for('static', filename=complaint['resolution_photo']) }}"
+                                                    class="student-photo"
+                                                    alt="After Resolution Photo">
+
+                                            </a>
+
+                                        {% else %}
+
+                                            <span class="student-no-photo">
+                                                Not resolved yet.
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <!-- STATUS -->
+                                    <td>
+
+                                        {% if complaint['status'] == 'Resolved' %}
+
+                                            <span class="student-status status-resolved">
+                                                ✓ Resolved
+                                            </span>
+
+                                        {% elif complaint['status'] == 'In Progress' %}
+
+                                            <span class="student-status status-progress">
+                                                ↻ In Progress
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="student-status status-pending">
+                                                ◷ Pending
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="student-empty">
+
+                        <div class="student-empty-icon">▣</div>
+
+                        <h3>No Complaints Submitted Yet</h3>
+
+                        <p>
+                            You have not submitted any campus complaints.
+                            Submit your first complaint to get started.
+                        </p>
+
+                        <a href="{{ url_for('new_complaint') }}"
+                           class="student-btn">
+                            ＋ Submit Your First Complaint
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+            <footer class="student-footer">
+                SmartCampus © AI-Based Smart Campus Complaint & Resolution System
+            </footer>
+
+        </main>
+
+    </div>
+
+</div>
+
+<script>
+function goBack() {
+
+    if (
+        document.referrer &&
+        new URL(document.referrer).origin === window.location.origin
+    ) {
+        history.back();
+    } else {
+        window.location.href = "{{ url_for('student_dashboard') }}";
+    }
+
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Registration | SmartCampus</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #0f172a, #3730a3, #7c3aed);
+}
+
+.card {
+    width: 100%;
+    max-width: 450px;
+    background: white;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px #0005;
+}
+
+h1 {
+    text-align: center;
+    color: #312e81;
+}
+
+.subtitle {
+    text-align: center;
+    color: #64748b;
+    margin: 10px 0 24px;
+}
+
+label {
+    display: block;
+    margin: 15px 0 7px;
+    font-weight: bold;
+    color: #334155;
+}
+
+input, select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #f8fafc;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 24px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(100deg, #2563eb, #7c3aed);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #4f46e5;
+    text-decoration: none;
+}
+
+.flash {
+    padding: 10px;
+    background: #fee2e2;
+    color: #991b1b;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+
+    <h1>🎓 Student Registration</h1>
+    <p class="subtitle">Create your SmartCampus account</p>
+
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+
+    <form method="POST">
+
+        <label>Full Name</label>
+        <input type="text" name="name"
+               placeholder="Enter your full name" required>
+
+        <label>Department</label>
+        <select name="department" required>
+            <option value="">Select Department</option>
+            <option value="AIML">AIML</option>
+            <option value="Computer">Computer</option>
+            <option value="IT">IT</option>
+            <option value="ENTC">ENTC</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Civil">Civil</option>
+        </select>
+
+        <label>College Email Address</label>
+        <input type="email" name="email"
+               placeholder="Enter your email" required>
+
+        <label>Create Password</label>
+        <input type="password" name="password"
+               placeholder="Minimum 8 characters"
+               minlength="8" required>
+
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password"
+               placeholder="Re-enter your password"
+               minlength="8" required>
+
+        <button type="submit">Create My Account</button>
+
+    </form>
+
+    <a href="{{ url_for('login') }}">
+        Already registered? Login
+    </a>
+
+</div>
+<script>
+function goBack() {
+    if (
+        document.referrer &&
+        new URL(document.referrer).origin === window.location.origin
+    ) {
+        history.back();
+    } else {
+        window.location.href = "/";
+    }
+}
+</script>
+</body>
+<button type="button" class="back-btn" onclick="goBack()">
+    ← Back
+</button>
+</html>

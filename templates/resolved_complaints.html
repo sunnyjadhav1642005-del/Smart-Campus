@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolved Complaints | SmartCampus</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f6fc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: #142b4a;
+            color: white;
+            padding: 22px 30px;
+        }
+
+        .header h1 {
+            font-size: 25px;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .topbar h2 {
+            font-size: 22px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 11px 16px;
+            border-radius: 8px;
+        }
+
+        .summary {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 12px #0000000a;
+        }
+
+        .summary p {
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .summary h3 {
+            font-size: 30px;
+            color: #15803d;
+        }
+
+        .table-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0000000a;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        .status {
+            background: #dcfce7;
+            color: #166534;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px 15px;
+            color: #64748b;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 20px;
+            }
+
+            .container {
+                padding: 0 12px;
+                margin-top: 20px;
+            }
+
+            .table-box {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>SmartCampus</h1>
+        <p>AI-Based Smart Campus Complaint & Resolution System</p>
+    </header>
+
+    <main class="container">
+
+        <div class="topbar">
+            <div>
+                <h2>Resolved Complaints</h2>
+                <p style="color:#64748b; margin-top:6px;">
+                    View all successfully resolved campus complaints.
+                </p>
+            </div>
+
+            <a class="back-link" href="{{ url_for('dashboard') }}">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <section class="summary">
+            <p>Total Resolved Complaints</p>
+            <h3>{{ complaints|length }}</h3>
+        </section>
+
+        <section class="table-box">
+            {% if complaints %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Complaint ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Department</th>
+                        <th>Location</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Submitted On</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for complaint in complaints %}
+                    <tr>
+                        <td>SC-{{ "%03d"|format(complaint["id"]) }}</td>
+                        <td>{{ complaint["title"] }}</td>
+                        <td>{{ complaint["category"] }}</td>
+                        <td>{{ complaint["department"] }}</td>
+                        <td>{{ complaint["location"] }}</td>
+                        <td>{{ complaint["priority"] }}</td>
+                        <td><span class="status">Resolved</span></td>
+                        <td>{{ complaint["created_at"] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+            <div class="empty">
+                <h3>No Resolved Complaints Yet</h3>
+                <p style="margin-top:10px;">
+                    Resolved complaints will appear here.
+                </p>
+            </div>
+            {% endif %}
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        SmartCampus | AI-Based Complaint Management
+    </footer>
+<script>
+function goBack() {
+    if (
+        document.referrer &&
+        new URL(document.referrer).origin === window.location.origin
+    ) {
+        history.back();
+    } else {
+        window.location.href = "/";
+    }
+}
+</script>
+</body>
+<button type="button" class="back-btn" onclick="goBack()">
+    ← Back
+</button>
+</html>

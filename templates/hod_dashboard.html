@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Dashboard | SmartCampus</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f6fc;
+            color: #243047;
+        }
+
+        header {
+            background: linear-gradient(120deg, #134e4a, #0f766e);
+            color: white;
+            padding: 22px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            font-size: 23px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            background: #ffffff25;
+            padding: 10px 18px;
+            border-radius: 8px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            padding: 10px 20px;
+            background: white;
+            color: #0f766e;
+            border: 1px solid #99f6e4;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 3px 12px #0002;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #ccfbf1;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1250px;
+            margin: 35px auto;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #64748b;
+        }
+
+        .department {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: #ccfbf1;
+            color: #115e59;
+            font-weight: bold;
+        }
+
+        .table-box {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px #0000000b;
+            overflow-x: auto;
+        }
+
+        .table-box h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid #e5eaf2;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        select, input[type="file"] {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 9px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: #f8fafc;
+        }
+
+        td button {
+            padding: 9px 14px;
+            border: none;
+            border-radius: 7px;
+            background: #0f766e;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        td button:hover {
+            background: #115e59;
+        }
+
+        .photo-section {
+            min-width: 180px;
+        }
+
+        .photo-section img {
+            width: 145px;
+            height: 105px;
+            object-fit: cover;
+            border-radius: 9px;
+            border: 1px solid #dbe3ed;
+            display: block;
+            margin: 6px 0 12px;
+        }
+
+        .photo-label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #334155;
+            margin-top: 8px;
+        }
+
+        .no-photo {
+            color: #94a3b8;
+            font-size: 13px;
+            margin: 5px 0 12px;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+        }
+
+        footer {
+            text-align: center;
+            color: #94a3b8;
+            padding: 25px;
+        }
+
+        @media(max-width: 600px) {
+            header {
+                padding: 65px 5% 20px;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .table-box {
+                padding: 15px;
+            }
+
+            .welcome h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<button type="button" class="back-btn" onclick="goBack()">
+    ← Back
+</button>
+
+<header>
+    <h2>🏫 SmartCampus | HOD Panel</h2>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h1>Welcome, {{ session.get('user_name', 'HOD') }} 👋</h1>
+
+        <p>Manage and monitor complaints from your department.</p>
+
+        <div class="department">
+            Department: {{ session.get('department', 'Not Assigned') }}
+        </div>
+    </div>
+
+    <div class="table-box">
+
+        <h2>Department Complaints</h2>
+
+        {% if complaints %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Complaint Details</th>
+                    <th>Before Resolution</th>
+                    <th>After Resolution</th>
+                    <th>Update Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for complaint in complaints %}
+
+                <tr>
+                    <td>{{ complaint['id'] }}</td>
+
+                    <td>
+                        <strong>{{ complaint['title'] }}</strong>
+                        <p>Category: {{ complaint['category'] }}</p>
+                        <p>Location: {{ complaint['location'] }}</p>
+                        <p>Priority: {{ complaint['priority'] }}</p>
+                        <p>Status: {{ complaint['status'] }}</p>
+                    </td>
+
+                    <td class="photo-section">
+
+                        {% if complaint['complaint_photo'] %}
+
+                            <div class="photo-label">Student's Photo</div>
+
+                            <a href="{{ url_for('static', filename=complaint['complaint_photo']) }}" target="_blank">
+                                <img src="{{ url_for('static', filename=complaint['complaint_photo']) }}" alt="Before Resolution">
+                            </a>
+
+                        {% else %}
+
+                            <p class="no-photo">No complaint photo uploaded.</p>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td class="photo-section">
+
+                        {% if complaint['resolution_photo'] %}
+
+                            <div class="photo-label">HOD's Resolution Photo</div>
+
+                            <a href="{{ url_for('static', filename=complaint['resolution_photo']) }}" target="_blank">
+                                <img src="{{ url_for('static', filename=complaint['resolution_photo']) }}" alt="After Resolution">
+                            </a>
+
+                        {% else %}
+
+                            <p class="no-photo">No resolution photo uploaded yet.</p>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <form method="POST"
+                              enctype="multipart/form-data"
+                              action="{{ url_for('hod_update_status', complaint_id=complaint['id']) }}">
+
+                            <select name="status" required>
+
+                                <option value="Pending"
+                                    {% if complaint['status'] == 'Pending' %}selected{% endif %}>
+                                    Pending
+                                </option>
+
+                                <option value="In Progress"
+                                    {% if complaint['status'] == 'In Progress' %}selected{% endif %}>
+                                    In Progress
+                                </option>
+
+                                <option value="Resolved"
+                                    {% if complaint['status'] == 'Resolved' %}selected{% endif %}>
+                                    Resolved
+                                </option>
+
+                            </select>
+
+                            <label class="photo-label">
+                                Upload Resolution Photo
+                            </label>
+
+                            <input type="file"
+                                   name="resolution_photo"
+                                   accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+
+                            <button type="submit">Update Status</button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+            <h3>No complaints found.</h3>
+            <p>There are currently no complaints for this department.</p>
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+<footer>
+    SmartCampus | Department Head Dashboard
+</footer>
+
+<script>
+function goBack() {
+
+    if (
+        document.referrer &&
+        new URL(document.referrer).origin === window.location.origin
+    ) {
+        history.back();
+    } else {
+        window.location.href = "{{ url_for('login') }}";
+    }
+
+}
+</script>
+
+</body>
+</html>
